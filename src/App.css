@@ -1,42 +1,64 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* 
 
-.App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
+  input: {
+    backgroundColor: "#0e1d24",
+    color: "#ffffff",
+    border: "1px solid #00c2d7",
+    borderRadius: "9999px",
+    padding: "0.5rem 1rem",
+    fontSize: "1rem",
+    width: "70%",
+  },
+  button: {
+    padding: "0.5rem 1.5rem",
+    backgroundColor: "#f4b400",
+    color: "#0e1d24",
+    fontWeight: "700",
+    borderRadius: "9999px",
+    border: "none",
+    cursor: "pointer",
+    transition: "all 0.3s ease-in-out",
+  },
+  buttonHover: {
+    backgroundColor: "#c59400",
+  },
+  mapContainer: {
+    width: "100%",
+    height: "600px",
+    borderRadius: "0.75rem",
+    border: "2px solid #00c2d7",
+    marginTop: "1rem",
+  },
+  messageBox: {
+    backgroundColor: "#0e1d24",
+    color: "#00c2d7",
+    border: "1px solid #00c2d7",
+    padding: "1rem",
+    borderRadius: "0.5rem",
+    marginBottom: "1rem",
+    textAlign: "center",
+  },
+  storeCard: {
+    backgroundColor: "#1a2e38",
+    padding: "1rem",
+    borderRadius: "0.75rem",
+    color: "#c7d2da",
+    border: "1px solid #00c2d7",
+    marginBottom: "1rem",
+  },
+  storeTitle: {
+    color: "#f4b400",
+    fontWeight: "700",
+    fontSize: "1.25rem",
+    marginBottom: "0.5rem",
+  },
+  storeSubtitle: {
+    color: "#c7d2da",
+    marginBottom: "0.5rem",
+  },
+  summaryList: {
+    listStyleType: "disc",
+    paddingLeft: "1rem",
+    color: "#c7d2da",
+  },
+}; */

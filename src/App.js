@@ -438,56 +438,14 @@ const App = () => {
   };
 
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        backgroundImage: "linear-gradient(to bottom right, #eff6ff, #e0e7ff)",
-        padding: "2rem",
-        fontFamily: "Inter, sans-serif",
-        WebkitFontSmoothing: "antialiased",
-        MozOsxFontSmoothing: "grayscale",
-        color: "#374151",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-      }}
-    >
-      <div
-        style={{
-          backgroundColor: "#ffffff",
-          padding: "2rem",
-          borderRadius: "1rem",
-          boxShadow:
-            "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
-          maxWidth: "48rem",
-          width: "100%",
-          marginBottom: "2rem",
-          border: "1px solid #e5e7eb",
-        }}
-      >
-        <h1
-          style={{
-            fontSize: "2.25rem",
-            fontWeight: "800",
-            textAlign: "center",
-            color: "#4338ca",
-            marginBottom: "1.5rem",
-          }}
-        >
-          Store Location Updater
-        </h1>
-        <p
-          style={{
-            textAlign: "center",
-            color: "#4b5563",
-            marginBottom: "2rem",
-          }}
-        >
+    <div>
+      <div className="card">
+        <h1 className="title">Store Location Updater</h1>
+        <p>
           Upload your Excel file, adjust store locations, and download the
           updated data.
         </p>
 
-        {/* File Upload Section */}
         <div
           style={{
             marginBottom: "1.5rem",
@@ -502,7 +460,7 @@ const App = () => {
               display: "block",
               fontSize: "1.125rem",
               fontWeight: "600",
-              color: "#374151",
+              color: "#fff",
               marginBottom: "0.75rem",
             }}
           >
@@ -517,7 +475,7 @@ const App = () => {
               display: "block",
               width: "100%",
               fontSize: "0.875rem",
-              color: "#6b7280",
+              color: "#fff",
               cursor: "pointer",
             }}
           />
