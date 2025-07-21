@@ -1,12 +1,9 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-// Removed @react-google-maps/api import as it's not directly supported in this environment
-// Removed xlsx import as it will be loaded via CDN
 
-// Define the container style for the Google Map
 const containerStyle = {
   width: "100%",
-  height: "600px", // Increased height for better visibility
-  borderRadius: "0.75rem" /* rounded-xl */,
+  height: "600px",
+  borderRadius: "0.75rem",
   boxShadow:
     "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)" /* shadow-xl */,
 };
@@ -34,6 +31,8 @@ const App = () => {
   const [message, setMessage] = useState(""); // User feedback messages
   const mapRef = useRef(null); // Ref for the map DOM element
   const isMapScriptLoaded = useRef(false); // To track if Google Maps script is loaded
+  const autocompleteRef = useRef(null);
+  const inputRef = useRef(null); // Add this at the top with other refs
 
   // Load updated stores from localStorage on component mount
   useEffect(() => {
@@ -90,7 +89,7 @@ const App = () => {
       let apiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
       const script = document.createElement("script");
       script.id = "google-map-script";
-      script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}`;
+      script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places`;
       script.async = true;
       script.defer = true;
       script.onload = () => {
@@ -225,6 +224,43 @@ const App = () => {
     }
   }, [currentStoreIndex, excelData, map]); // Depend on currentStoreIndex, excelData, and map
 
+  useEffect(() => {
+    if (
+      window.google &&
+      window.google.maps &&
+      inputRef.current &&
+      !autocompleteRef.current
+    ) {
+      autocompleteRef.current = new window.google.maps.places.Autocomplete(
+        inputRef.current,
+        {
+          types: ["geocode"],
+          componentRestrictions: { country: "za" }, // Optional: restrict to South Africa
+        }
+      );
+
+      autocompleteRef.current.addListener("place_changed", () => {
+        const place = autocompleteRef.current.getPlace();
+        if (place.geometry && place.geometry.location) {
+          const location = {
+            lat: place.geometry.location.lat(),
+            lng: place.geometry.location.lng(),
+          };
+
+          map.setCenter(location);
+          map.setZoom(15);
+
+          if (greenMarkerRef.current) {
+            greenMarkerRef.current.setPosition(location);
+            setGreenMarkerPosition(location);
+            setIsGreenMarkerMoved(true);
+          }
+
+          setMessage(`Autocomplete result: ${place.formatted_address}`);
+        }
+      });
+    }
+  }, [map]);
   // Handle file upload
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
@@ -568,6 +604,7 @@ const App = () => {
             type="text"
             placeholder="Enter address"
             value={address}
+            ref={inputRef}
             onChange={(e) => setAddress(e.target.value)}
             style={{
               padding: "0.5rem 1rem",
@@ -651,50 +688,48 @@ const App = () => {
             </button>
           )}
 
-          {excelData.length > 0 &&
-            currentStoreIndex < excelData.length &&
-            !isGreenMarkerMoved && (
-              <button
-                onClick={() => setCurrentStoreIndex((prev) => prev + 1)}
-                style={{
-                  paddingLeft: "2rem",
-                  paddingRight: "2rem",
-                  paddingTop: "0.75rem",
-                  paddingBottom: "0.75rem",
-                  backgroundColor: "#2563eb",
-                  color: "#ffffff",
-                  fontWeight: "700",
-                  borderRadius: "9999px",
-                  boxShadow:
-                    "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
-                  transitionProperty: "all",
-                  transitionDuration: "300ms",
-                  transitionTimingFunction: "cubic-bezier(0.4, 0, 0.2, 1)",
-                  transform: "scale(1)",
-                  outline: "none",
-                  border: "none",
-                  cursor: "pointer",
-                  opacity: currentStoreIndex >= excelData.length - 1 ? 0.5 : 1, // disabled styling
-                }}
-                onMouseOver={(e) =>
-                  (e.currentTarget.style.backgroundColor = "#1d4ed8")
-                }
-                onMouseOut={(e) =>
-                  (e.currentTarget.style.backgroundColor = "#2563eb")
-                }
-                onFocus={(e) =>
-                  (e.currentTarget.style.boxShadow =
-                    "0 0 0 4px rgba(96, 165, 250, 0.5)")
-                }
-                onBlur={(e) =>
-                  (e.currentTarget.style.boxShadow =
-                    "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)")
-                }
-                disabled={currentStoreIndex >= excelData.length - 1}
-              >
-                Skip & Next Store
-              </button>
-            )}
+          {excelData.length > 0 && currentStoreIndex < excelData.length && (
+            <button
+              onClick={() => setCurrentStoreIndex((prev) => prev + 1)}
+              style={{
+                paddingLeft: "2rem",
+                paddingRight: "2rem",
+                paddingTop: "0.75rem",
+                paddingBottom: "0.75rem",
+                backgroundColor: "#2563eb",
+                color: "#ffffff",
+                fontWeight: "700",
+                borderRadius: "9999px",
+                boxShadow:
+                  "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
+                transitionProperty: "all",
+                transitionDuration: "300ms",
+                transitionTimingFunction: "cubic-bezier(0.4, 0, 0.2, 1)",
+                transform: "scale(1)",
+                outline: "none",
+                border: "none",
+                cursor: "pointer",
+                opacity: currentStoreIndex >= excelData.length - 1 ? 0.5 : 1, // disabled styling
+              }}
+              onMouseOver={(e) =>
+                (e.currentTarget.style.backgroundColor = "#1d4ed8")
+              }
+              onMouseOut={(e) =>
+                (e.currentTarget.style.backgroundColor = "#2563eb")
+              }
+              onFocus={(e) =>
+                (e.currentTarget.style.boxShadow =
+                  "0 0 0 4px rgba(96, 165, 250, 0.5)")
+              }
+              onBlur={(e) =>
+                (e.currentTarget.style.boxShadow =
+                  "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)")
+              }
+              disabled={currentStoreIndex >= excelData.length - 1}
+            >
+              Skip & Next Store
+            </button>
+          )}
 
           {updatedStores.length > 0 && (
             <button
